@@ -16,7 +16,7 @@ import torch
 A = 
 ```
 
-
+Suppose we would like to compute the following partial-trace/tensor-contraction $C_{njwl} = A_{iksndj} B_{wklsdi}$:
 ```python
 C_einsum = bisum("iksndj, wklsdi -> njwl", A, B)
 C_ncon   = bisum([[-1,-2,-3,4,-5,6],[1,-2,3,-3,-5,-1]], A, B)
