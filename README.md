@@ -1,4 +1,4 @@
-# sTr
+# bisum
 PyTorch Sparse-Tensor Partial-Trace (PyTorch_sTr)
 This program traces 2-sparse-tensor (torch.tensor objects) via 3 Tracing-Prescription:
 1. einsum string (like numpy, str, labelling each tensor axis)
