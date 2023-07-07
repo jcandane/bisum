@@ -1,11 +1,12 @@
 import torch
+from _basicfunctions import ints_to_tuples
 from uniform_random_sparse_tensor import uniform_random_sparse_tensor
 from label_process_einsum import einsumstr_to_labels
 from label_process_ncon import ncon_to_labels
 from rowslice import rowslice
 from adjmatrix_builder import adjmatrix_builder
 from wellorder import wellorder
-from directintersection import twotrace
+from directintersection import twotrace, make_matrix
 from post_transpose import post_transpose
 
 def bisum(Rx, a, b, return_label : bool = False, device : torch.device=torch.device("cpu")):
@@ -35,6 +36,32 @@ def bisum(Rx, a, b, return_label : bool = False, device : torch.device=torch.dev
     else:
         if isinstance(Rx, list): # ncon  (no post transpose)
             LHS, RHS, intratraces = ncon_to_labels(Rx)
+
+            if a.is_sparse and b.is_sparse: ## a & b SPARSE
+                A, lA = rowslice(a, LHS[0], intratrace=intratraces[0])
+                B, lB = rowslice(b, LHS[1], intratrace=intratraces[1])
+                A     = wellorder(A)
+                B     = wellorder(B)
+
+                AA    = adjmatrix_builder(lA, lB)
+                A, le = make_matrix(A, AA[0], left=True)
+                B, lf = make_matrix(B, AA[1], left=False)
+
+                m_c   = A @ B
+                II    = torch.concat([ints_to_tuples(m_c._indices()[0], le), ints_to_tuples(m_c._indices()[1], lf)])
+                m_c   = torch.sparse_coo_tensor(II, m_c._values(), [int(i) for i in torch.concat([le, lf])])
+
+            else:
+                if (not a.is_sparse) and b.is_sparse: ## A==dense & B==Sparse, must place dense matrix to the right!
+                    None
+
+                else:
+                    if (a.is_sparse) and (not b.is_sparse): ## A==Sparse & B==dense
+                        None
+                    else: ## A==dense & B==dense
+                        None
+
+            
             a, la = rowslice(a, LHS[0], intratrace=intratraces[0])
             b, lb = rowslice(b, LHS[1], intratrace=intratraces[1])
             a     = wellorder(a)

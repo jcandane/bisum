@@ -1,16 +1,15 @@
 import torch
 
-from _randomeinsumstring import random_einsum_string
-
-def einsumstr_to_labels(einsum_string):
+@torch.jit.script
+def einsumstr_to_labels(einsum_string : str):
     """
-    GIVEN : einsum_string (np.einsum string)
-    GET   : LHS (list of 1d torch.tensors labelling each tensor in einsum_string)
-            RHS (1d torch.tensor labelling external indices of output tensor)
-            intratraces (list of 1d torch.tensors labelling each tensor, in intra-interal-indices)
+    GIVEN : einsum_string (str, numpy.einsum-string)
+    GET   : LHS (List[1d-int-torch.tensors] labelling each tensor in einsum_string)
+            RHS (1d-int-torch.tensor labelling external indices of output tensor)
+            intratraces (List[1d-int-torch.tensors] labelling each tensor, in intra-interal-indices)
     """
 
-    liststring    = einsum_string.replace(" ","").split("->") ## this is a list (should be at most 2 entries: LHS, RHS)
+    liststring    = einsum_string.replace(" ","").split("->") ## this is a list (at most 2 entries: LHS, RHS)
     if len(liststring)==2: ## RHS given
         LHS = liststring[0].split(",")
         LHS = [torch.tensor([ord(char) for char in word]) for word in LHS]
@@ -26,7 +25,7 @@ def einsumstr_to_labels(einsum_string):
             unique_values = unique_values[torch.all(torch.ne(unique_values.unsqueeze(1), not_these.unsqueeze(0)),1)]
             intratraces.append( torch.unique(unique_values) )
 
-    if len(liststring)==1: ## no RHS, go reg. convention (repeats are dummies)
+    else: #if len(liststring)==1: ## no RHS, go reg. convention (repeats are dummies)
         LHS = liststring[0].split(",") ## should be at most 2-here
         LHS = [torch.tensor([ord(char) for char in word]) for word in LHS]
 
@@ -34,7 +33,7 @@ def einsumstr_to_labels(einsum_string):
         RHS   = liststring[0].replace(",","")
         RHS   = torch.tensor([ord(char) for char in RHS])
         unique_values, counts = torch.unique(RHS, return_counts=True)
-        dupes = unique_values[counts > 1]     # Filter-out duplicate values ### GATHER
+        dupes = unique_values[counts > 1]     # Filter-out duplicate values, gather
         mask  = torch.logical_not(torch.any(torch.eq(RHS.unsqueeze(1), dupes.unsqueeze(0)), 1))
         RHS   = RHS[mask] ## in org. order
 
@@ -52,7 +51,9 @@ def einsumstr_to_labels(einsum_string):
 
     return LHS, RHS, intratraces
 
-#TESTS
+##TESTS
+#from _randomeinsumstring import random_einsum_string
+#
 #l_rand = random_einsum_string(rhs=True)
 
 #lhs, rhs, intratr = (einsumstr_to_labels(l_rand))

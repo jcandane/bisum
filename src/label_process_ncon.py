@@ -1,20 +1,22 @@
 import torch
+from typing import List
 
-def ncon_to_labels(ncon):
+@torch.jit.script
+def ncon_to_labels(ncon : List[torch.Tensor]):
     """
     GIVEN : einsum_string (np.einsum string)
-    GET   : LHS (list of 1d torch.tensors labelling each tensor in einsum_string)
-            RHS (1d torch.tensor labelling external indices of output tensor)
-            intratraces (list of 1d torch.tensors labelling each tensor, in intra-interal-indices)
+    GET   : LHS (List[1d-int-torch.tensors] labelling each tensor in einsum_string)
+            RHS (1d-int-torch.tensor labelling external indices of output tensor)
+            intratraces (List[1d-int-torch.tensors] labelling each tensor, in intra-interal-indices)
     """
 
     ### build LHS
     LHS = ncon
 
     ### build RHS-label
-    RHS   = torch.concat(LHS)
+    RHS   = torch.concat((LHS))
     unique_values, counts = torch.unique(RHS, return_counts=True)
-    dupes = unique_values[torch.logical_or((counts > 1),(unique_values<0))]     # Filter-out duplicate values ### GATHER
+    dupes = unique_values[torch.logical_or((counts > 1),(unique_values<0))]  # filter-out duplicate values
     mask  = torch.logical_not(torch.any(torch.eq(RHS.unsqueeze(1), dupes.unsqueeze(0)), 1))
     RHS   = RHS[mask] ## in org. order
 
