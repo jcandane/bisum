@@ -29,7 +29,7 @@ print( torch.allclose(C_einsum, C_ncon) and torch.allclose(C_ncon, C_adjmat) )
 ```
 while the pure tensor-product, $\otimes$ is:
 ```python
-C_einsum = bisum("iksndj, wklsdi -> njwl", A, B)
+C_einsum = bisum("abcdef, ghijkl", A, B)
 C_ncon   = bisum([], A, B)
 C_adjmat = bisum(torch.tensor([]), A, B)
 
