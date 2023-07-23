@@ -1,5 +1,11 @@
+"""
+unform_random_sparse_tensors.py
+
+This python-file contains functions to create a random sparse tensor that was uniformly sampled.
+"""
+
 import torch
-from _basicfunctions import ints_to_tuples
+from generic_functions import ints_to_tuples
 
 @torch.jit.script
 def random_unique_ints(amount : int, limit : int, dtype : torch.dtype = torch.int32, device : torch.device=torch.device("cpu")):
@@ -32,8 +38,8 @@ def random_sparse_tensor(N, shape, device : torch.device=torch.device("cpu")):
     Random_tuple = random_unique_ints(N, torch.prod(shape), dtype=torch.int32, device=device)
     return ints_to_tuples(Random_tuple, shape).T, torch.rand(N), shape
 
-#@torch.jit.script
-def uniform_random_sparse_tensor(N : int, shape, dtype : torch.dtype = torch.float32, indexdtype : torch.dtype = torch.int32, device : torch.device=torch.device("cpu")):
+@torch.jit.script
+def uniform_random_sparse_tensor(N : int, shape, dtype : torch.dtype = torch.float32, indexdtype : torch.dtype = torch.int64, device : torch.device=torch.device("cpu")):
     Random_tuples = ints_to_tuples(random_unique_ints(N, torch.prod(shape), dtype=indexdtype, device=device), shape)
     return torch.sparse_coo_tensor(Random_tuples, torch.rand(N, dtype=dtype, device=device), [int( s.item() ) for s in shape] ) ## tuple(shape)
 
@@ -42,4 +48,3 @@ def uniform_random_sparse_tensor(N : int, shape, dtype : torch.dtype = torch.flo
 #print(device)
 #b     = random_unique_ints(15, 246)#
 #a     = uniform_random_sparse_tensor(15000, torch.tensor([4,4,4,4,4,4,4,4], device=device), device=device)
-#print(a._indices().dtype)
