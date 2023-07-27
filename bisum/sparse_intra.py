@@ -5,7 +5,7 @@ This contains functions for processing sparse tensor intra-operations (slicing &
 """
 
 import torch
-from generic_functions import first_occurrence_mask, lexsort, iargsort
+from .generic_functions import first_occurrence_mask, lexsort, iargsort
 
 ### given LHS && intra-traces compute reduced/sliced sparse-tensor
 
