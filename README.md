@@ -10,13 +10,13 @@ This program traces 2 sparse-tensor (torch.tensor objects) via 3 Tracing-Prescri
 
 Let's begin by initializing the 2 tensors, we can initialize random-sparse-tensors 
 ```python
-import bisum
+from bisum.bisum import bisum
 import torch
 
 shape_A = torch.tensor([8,7,7,4,11,6])
 shape_B = torch.tensor([9,7,3,7,11,8])
-A = bisum(shape_A, density=0.05)
-B = bisum(shape_B, density=0.05)
+A = torch.rand(shape_A)
+B = torch.rand(shape_B)
 ```
 
 Suppose we would like to compute the following partial-trace/tensor-contraction $C_{njwl} = A_{iksndj} B_{wklsdi}$:
