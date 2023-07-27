@@ -5,8 +5,8 @@ This generalizes tensordot for sparse tensors (with dense tensors).
 """
 
 import torch
-from generic_functions import ints_to_tuples, cartesian_product
-from tensor_to_matrix import sp_tensor_to_matrix, dn_tensor_to_matrix, rawsp_tensor_to_matrix
+from .generic_functions import ints_to_tuples, cartesian_product
+from .tensor_to_matrix import sp_tensor_to_matrix, dn_tensor_to_matrix, rawsp_tensor_to_matrix
 
 @torch.jit.script
 def sd_outer(a, b):

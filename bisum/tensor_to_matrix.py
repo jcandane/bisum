@@ -5,7 +5,7 @@ Fold dense and sparse tensors into matrices (dense or sparse)
 """
 
 import torch
-from generic_functions import pytorch_delete, tuples_to_ints
+from .generic_functions import pytorch_delete, tuples_to_ints
 
 
 @torch.jit.script

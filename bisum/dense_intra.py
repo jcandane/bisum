@@ -5,7 +5,7 @@ This contains functions for processing dense tensor intra-operations (slicing & 
 """
 
 import torch
-from generic_functions import first_occurrence_mask, pytorch_delete, iargsort
+from .generic_functions import first_occurrence_mask, pytorch_delete, iargsort
 
 ### given LHS && intra-traces compute reduced/sliced sparse-tensor
 @torch.jit.script

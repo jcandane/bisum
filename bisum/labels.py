@@ -4,9 +4,11 @@ labels.py
 Einsum-string and ncon Label processing.
 """
 
-import torch
-from generic_functions import first_occurrence_mask
 from typing import List
+import torch
+
+from .generic_functions import first_occurrence_mask
+
 
 @torch.jit.script
 def einsumstr_to_labels(einsum_string : str, device : torch.device=torch.device("cpu")):

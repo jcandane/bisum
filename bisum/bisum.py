@@ -7,13 +7,13 @@ Primary Function of the bisum package, for sparse & dense tensor partial-tracing
 import torch
 
 ###
-from labels import einsumstr_to_labels, ncon_to_labels
-from tensordot import ss_tensordot , sd_tensordot , sd_tensordot
-from tensordot import ss_tensordot_, sd_tensordot_, ds_tensordot_
-from dense_intra import den_tensor_intraTr, den_post_intraTr, den_post_trans
+from .labels import einsumstr_to_labels, ncon_to_labels
+from .tensordot import ss_tensordot , sd_tensordot , sd_tensordot
+from .tensordot import ss_tensordot_, sd_tensordot_, ds_tensordot_
+from .dense_intra import den_tensor_intraTr, den_post_intraTr, den_post_trans
 
-from sparse_intra import spa_post_trans, spa_tensor_intraTr, spa_post_intraTr 
-from sparse_intra import spa_post_trans_, spa_tensor_intraTr_, spa_post_intraTr_
+from .sparse_intra import spa_post_trans, spa_tensor_intraTr, spa_post_intraTr 
+from .sparse_intra import spa_post_trans_, spa_tensor_intraTr_, spa_post_intraTr_
 
 def bisum(Rx, a, b):
     """
