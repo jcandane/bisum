@@ -180,7 +180,7 @@ def ss_tensordot_(a_index, a_data, a_shape, b_index, b_data, b_shape, dims=None)
                         raise ValueError
     return I, data, shape_
 
-@torch.jit.script
+#@torch.jit.script
 def ds_tensordot_(a, b_index, b_data, b_shape, dims=None):
     """
     GIVEN : a, dense  torch.tensor
@@ -193,9 +193,8 @@ def ds_tensordot_(a, b_index, b_data, b_shape, dims=None):
     else: ## directintersection
         # a is dense && b is sparse
         m_A, exlabel_A = dn_tensor_to_matrix(a, dims[0], left=False ) ## True
-        m_B, exlabel_B = rawsp_tensor_to_matrix(b_index, b_data, b_shape, dims[1], left=False)
+        m_B, exlabel_B = rawsp_tensor_to_matrix(b_index, b_data, b_shape, dims[1], left=True)
         
-        #m_B, exlabel_B = sp_tensor_to_matrix(b, dims[1], left=True ) ## False
         c = m_B @ m_A ### SPARSE is first??!?
         c = c.T.reshape( [ int(i) for i in torch.concat([torch.flatten(exlabel_B), torch.flatten(exlabel_A)])])
     return c
@@ -214,5 +213,6 @@ def sd_tensordot_(a_index, a_data, a_shape, b, dims=None):
         m_A, exlabel_A = rawsp_tensor_to_matrix(a_index, a_data, a_shape, dims[0], left=True ) ## True
         m_B, exlabel_B = dn_tensor_to_matrix(b, dims[1], left=False  ) ## False
         c = m_A @ m_B ## Sparse is 1st
-        c = c.reshape([int(i) for i in torch.concat([exlabel_A, exlabel_B])])
+        #c = c.reshape([int(i) for i in torch.concat([exlabel_A, exlabel_B])])
+        c = c.reshape( [ int(i) for i in torch.concat([torch.flatten(exlabel_B), torch.flatten(exlabel_A)])])
     return c

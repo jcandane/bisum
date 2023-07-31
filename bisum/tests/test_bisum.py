@@ -6,6 +6,7 @@ This python-file contains various tests for the bisum package.
 
 import torch
 from bisum.bisum import bisum
+#from bisum import bisum
 ###from dev_defs import sptensordot, sdtensordot
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -62,42 +63,56 @@ adjj = torch.tensor([[],[]], device=device)
 #print(C.shape, c.shape)
 #print( torch.allclose(C, c.to_dense()) )
 
+"""
+EINSUM TESTS
+"""
+
 einsumstr = "aeacec,cdd -> aed" ## SPARSE-SPARSE, NO post-inter-externals, NO post-transpose
 A = torch.rand(10,10,10,10,10,10, device=device)
 B = torch.rand(10,10,10, device=device)
-print( torch.allclose( bisum( einsumstr, A.to_sparse(), B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A, B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A, B).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A.to_sparse(), B).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A, B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )
 
 einsumstr = "daa,aed -> a" ## SPARSE-SPARSE, YES post-inter-externals, NO post-transpose
 A = torch.rand(10,10,10, device=device)
 B = torch.rand(10,10,10, device=device)
 print( torch.allclose( bisum( einsumstr, A.to_sparse(), B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )
-
-### acc -> ac
-### cdd -> cd  ----> accd ----> acd
+print( torch.allclose( bisum( einsumstr, A, B).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A.to_sparse(), B).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A, B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )
 
 einsumstr = "daa,aed -> ea" ## SPARSE-SPARSE, YES post-inter-externals, YES post-transpose
 A = torch.rand(10,10,10, device=device)
 B = torch.rand(10,10,10, device=device)
 print( torch.allclose( bisum( einsumstr, A.to_sparse(), B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A, B).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A, B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A.to_sparse(), B).to_dense(), torch.einsum( einsumstr , A, B )) )
 
-### acc -> ac
-### cdd -> cd  ----> accd ----> acd
+einsumstr = "daa,aed -> ea" ## SPARSE-DENSE, YES post-inter-externals, YES post-transpose
+A = torch.rand(10,10,10, device=device)
+B = torch.rand(10,10,10, device=device)
+print( torch.allclose( bisum( einsumstr, A.to_sparse(), B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A, B).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A.to_sparse(), B).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A, B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )
 
-##### if slicing returns an empty array avoid lexsort!!!!!!!!!!!!!!!! AND "dad,mom -> dm"
+##### if slicing returns an empty array avoid lexsort!!
 einsumstr = "aaa,wop -> a" ## SPARSE-SPARSE, YES post-inter-externals, YES post-transpose
 A = torch.rand(13,13,13, device=device)
 B = torch.rand(10,10,10, device=device)
 print( torch.allclose( bisum( einsumstr, A.to_sparse(), B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )
-
-
-##### if slicing returns an empty array avoid lexsort!!!!!!!!!!!!!!!! AND "dad,mom -> dm"
-einsumstr = "aaa,wop -> a" ## SPARSE-DENSE, YES post-inter-externals, YES post-transpose
-A = torch.rand(10,10,10, device=device)
-B = torch.rand(10,10,10, device=device)
+print( torch.allclose( bisum( einsumstr, A, B).to_dense(), torch.einsum( einsumstr , A, B )) )
 print( torch.allclose( bisum( einsumstr, A.to_sparse(), B).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A, B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )
 
-##### if slicing returns an empty array avoid lexsort!!!!!!!!!!!!!!!! AND "dad,mom -> dm"
+##### if slicing returns an empty array avoid lexsort!
 einsumstr = "qaq,wow -> " ## SPARSE-DENSE, YES post-inter-externals, YES post-transpose
 A = torch.rand(10,10,10, device=device)
 B = torch.rand(10,10,10, device=device)
+print( torch.allclose( bisum( einsumstr, A.to_sparse(), B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A, B).to_dense(), torch.einsum( einsumstr , A, B )) )
 print( torch.allclose( bisum( einsumstr, A.to_sparse(), B).to_dense(), torch.einsum( einsumstr , A, B )) )
+print( torch.allclose( bisum( einsumstr, A, B.to_sparse()).to_dense(), torch.einsum( einsumstr , A, B )) )

@@ -247,7 +247,7 @@ def spa_post_intraTr_(index, data, shape_, label):
 
 
 #@torch.jit.script
-def spa_post_trans_(index, data, shape_, rhs, RHS):
+def spa_post_trans_X(index, data, shape_, rhs, RHS):
     rhs=rhs[first_occurrence_mask(rhs)]
     j = torch.argsort(rhs)
     k = torch.argsort(RHS)
@@ -260,6 +260,22 @@ def spa_post_trans_(index, data, shape_, rhs, RHS):
 
     return torch.sparse_coo_tensor( cc[:,n] , data[n], [int(i.item()) for i in s]) ## .type(torch.LongTensor) not needed
 
+@torch.jit.script
+def spa_post_trans_(index, data, shape_, rhs, RHS):
+    if torch.numel(RHS)>0:
+        rhs=rhs[first_occurrence_mask(rhs)]
+        j = torch.argsort(rhs)
+        k = torch.argsort(RHS)
+        ik= iargsort(k)
+        m = j[ik]
+
+        cc= index[m,:]
+        s = shape_[m]
+        n = lexsort( cc )
+
+        return torch.sparse_coo_tensor( cc[:,n] , data[n], [int(i.item()) for i in s])
+    else: ## a is a scalar (cannot permute)
+        return torch.sparse_coo_tensor( index , data, [int(i.item()) for i in shape_])
 
 
 ### TESTS
