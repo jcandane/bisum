@@ -21,7 +21,10 @@ def bisum(Rx, a, b):
     """
     if torch.is_tensor(Rx): # and Rx.shape[0]==2:  # is adj.matrix (no post transpose nor slice) 
         if (not a.is_sparse) and (not b.is_sparse): ## both dense
-            c = torch.tensordot(a, b, dims=Rx)
+            if torch.numel(Rx)==0:
+                c = torch.tensordot(a, b, dims=0)
+            else:
+                c = torch.tensordot(a, b, dims=Rx)
         else:
             if (a.is_sparse) and (b.is_sparse):
                 c = ss_tensordot(a, b, dims=Rx)
@@ -41,7 +44,10 @@ def bisum(Rx, a, b):
             a = den_tensor_intraTr(a, LHS[0], inTr[0])
             b = den_tensor_intraTr(b, LHS[1], inTr[1])
 
-            c = torch.tensordot(a, b, dims=adjmat)
+            if torch.numel(adjmat)==0:
+                c = torch.tensordot(a, b, dims=0)
+            else:
+                c = torch.tensordot(a, b, dims=adjmat)
 
             c = den_post_intraTr(c, rhs)
             c = den_post_trans(c, rhs, RHS) #for dense
@@ -74,6 +80,6 @@ def bisum(Rx, a, b):
                     #c = sd_tensordot(a, b, dims=adjmat) ##!!!
                     c = ds_tensordot_(a, b_index, b_data, b_shape, dims=adjmat)
                     
-                    c = den_post_intraTr(c, rhs)
+                    c = den_post_intraTr(c, rhs) ### if empty skip...
                     c = den_post_trans(c, rhs, RHS)
     return c

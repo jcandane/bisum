@@ -7,6 +7,12 @@ This contains functions for processing dense tensor intra-operations (slicing & 
 import torch
 from .generic_functions import first_occurrence_mask, pytorch_delete, iargsort
 
+@torch.jit.script
+def remove_ones(a):
+    new_shape = torch.tensor( a.shape, dtype=torch.int64 , device=a.device)
+    new_shape = new_shape[new_shape!=1]
+    return a.reshape([int(i.item()) for i in new_shape])
+
 ### given LHS && intra-traces compute reduced/sliced sparse-tensor
 @torch.jit.script
 def den_post_trans(a, rhs, RHS):
@@ -28,7 +34,12 @@ def den_post_intraTr(a, label):
     GET   : a (torch.tensor{dense}, intratraced and sliced)
             label (1d-int-torch.tensor, with duplicates and intraTr removed, keeping org. order)
     """
-    if torch.numel(label)>0: ## if not empty, its a tensor....
+    a = remove_ones(a) ### remove axes which have dimension 1
+    b = torch.unique(label)
+    if (b.shape == label.shape): ## no repeats proceed
+        return a
+    #if torch.numel(label)>0: ## if not empty, its a tensor....
+    else:
         in_string = ""
         for i in label:
             in_string+=chr(i)
@@ -38,8 +49,8 @@ def den_post_intraTr(a, label):
         for i in label:
             out_string+=chr(i)
         return torch.einsum(in_string + "->" + out_string, a) #, label
-    else: ## its a scalar return itself
-        return a
+    #else: ## its a scalar return itself
+    #    return a
 
 @torch.jit.script
 def den_tensor_intraTr(a, label, intratrace):

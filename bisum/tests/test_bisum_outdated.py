@@ -1,7 +1,8 @@
 """
 TESTS.py
 
-This python-file contains various tests for the bisum package.
+This python-file contains various tests for the bisum package. These tests are outdated and are
+superceded by tests in test_bisum.py.
 """
 
 import torch

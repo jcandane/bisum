@@ -22,8 +22,8 @@ def einsumstr_to_labels(einsum_string : str, device : torch.device=torch.device(
     liststring    = einsum_string.replace(" ","").split("->") ## this is a list (at most 2 entries: LHS, RHS)
     if len(liststring)==2: ## RHS given
         LHS = liststring[0].split(",")
-        LHS = [torch.tensor([ord(char) for char in word], device=device) for word in LHS]
-        RHS =  torch.tensor([ord(char) for char in liststring[1]], device=device)
+        LHS = [torch.tensor([ord(char) for char in word], dtype=torch.int64, device=device) for word in LHS]
+        RHS =  torch.tensor([ord(char) for char in liststring[1]], dtype=torch.int64, device=device)
 
         global_internal, counts = torch.unique(torch.concat([torch.unique(lhs) for lhs in LHS]), return_counts=True)
         global_internal = global_internal[counts == len(LHS)]
@@ -37,11 +37,11 @@ def einsumstr_to_labels(einsum_string : str, device : torch.device=torch.device(
 
     else: #if len(liststring)==1: ## no RHS, go reg. convention (repeats are dummies)
         LHS = liststring[0].split(",") ## should be at most 2-here
-        LHS = [torch.tensor([ord(char) for char in word], device=device) for word in LHS]
+        LHS = [torch.tensor([ord(char) for char in word], dtype=torch.int64, device=device) for word in LHS]
 
         ### build RHS-label
         RHS   = liststring[0].replace(",","")
-        RHS   = torch.tensor([ord(char) for char in RHS], device=device)
+        RHS   = torch.tensor([ord(char) for char in RHS], dtype=torch.int64, device=device)
         unique_values, counts = torch.unique(RHS, return_counts=True)
         dupes = unique_values[counts > 1]     # Filter-out duplicate values, gather
         mask  = torch.logical_not(torch.any(torch.eq(RHS.unsqueeze(1), dupes.unsqueeze(0)), 1))
