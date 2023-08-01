@@ -5,8 +5,7 @@ This python-file contains various tests for the bisum package.
 """
 
 import torch
-from bisum.bisum import bisum
-#from bisum import bisum
+from bisum import bisum
 ###from dev_defs import sptensordot, sdtensordot
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
