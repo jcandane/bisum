@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=40.8.0", "wheel"]
+
+[project]
+name = 'bisum'
+version = '0.1.1'
+license = {file = "LICENSE"}
+description = "binary sparse and dense tensor partial-tracing"
+authors = [
+   {name = 'Julio Candanedo', email = 'juliojcandanedo@gmail.com'}
+]
+maintainers = [
+   {name = 'Julio Candanedo', email = 'juliojcandanedo@gmail.com'}
+]
+requires-python = ">=3.8"
+dependencies = ['torch']
+keywords = [
+   'pytorch', 'torch', 'tensors', 'Sparse Tensor', 'Sparse',
+   'contraction', 'partial-tracing', 'einsum', 'tensordot',
+   'attention']
+classifiers = [
+    'Development Status :: 3 - Alpha',
+    'Intended Audience :: Developers',
+    'Topic :: Software Development :: Build Tools',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3.8',    
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Topic :: Scientific/Engineering',
+    'Topic :: Software Development :: Libraries :: Python Modules',    
+]
+
+[project.urls]
+Source = 'https://github.com/jcandane/bisum'
