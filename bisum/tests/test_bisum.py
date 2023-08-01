@@ -5,9 +5,9 @@ This python-file contains various tests for the bisum package.
 """
 
 import torch
-from bisum.bisum import bisum
-
 import pytest
+
+from bisum.bisum import bisum
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
