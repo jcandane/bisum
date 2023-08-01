@@ -3,3 +3,9 @@ dist
 MANIFEST
 *.egg-info
 __pycache__
+
+# editor backup files
+*~
+
+# testing
+.coverage
