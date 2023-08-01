@@ -1,5 +1,6 @@
 [build-system]
-requires = ["setuptools>=40.8.0", "wheel"]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = 'bisum'
@@ -12,6 +13,7 @@ authors = [
 maintainers = [
    {name = 'Julio Candanedo', email = 'juliojcandanedo@gmail.com'}
 ]
+readme = "README.md"
 requires-python = ">=3.8"
 dependencies = ['torch']
 keywords = [
@@ -21,17 +23,21 @@ keywords = [
 classifiers = [
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',
-    'Topic :: Software Development :: Build Tools',
-    'License :: OSI Approved :: MIT License',
+    'Intended Audience :: Science/Research',
+     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3.8',    
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
+    'Operating System :: OS Independent',
     'Topic :: Scientific/Engineering',
     'Topic :: Software Development :: Libraries :: Python Modules',    
 ]
 
 [project.urls]
 Source = 'https://github.com/jcandane/bisum'
+
+[tool.setuptools.packages.find]
+include = ["bisum"]
