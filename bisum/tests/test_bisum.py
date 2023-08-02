@@ -5,28 +5,12 @@ This python-file contains various tests for the bisum package.
 """
 
 import torch
+import pytest
+
 from bisum import bisum
-###from dev_defs import sptensordot, sdtensordot
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-#device = torch.device("cpu")
-print(device)
 
-#### Einsum Sparse-Sparse
-#einsumstr, shape1, shape2 = random_einsum_string(return_shapes=True)
-
-
-#C = torch.einsum( einsumstr, A, B )
-#c = bisum( einsumstr, A.to_sparse(), B.to_sparse() )
-
-#print(C.shape, c.shape)
-#print( einsumstr )
-#print( torch.allclose(C,c.to_dense()) )
-
-#### REGULAR TRACE
-A = torch.rand(10,10,10,10, device=device)
-B = torch.rand(10,10,10,10, device=device)
-adjj = torch.tensor([[0,3,2,1],[1,2,3,0]], device=device)
 
 ####c = sptensordot(A.to_sparse(), B.to_sparse(), dims=adjj)
 #s = sdtensordot(A.to_sparse(), B, dims=adjj)

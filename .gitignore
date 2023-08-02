@@ -4,3 +4,12 @@ MANIFEST
 *.egg-info
 __pycache__
 build
+
+# editor backup files
+*~
+
+# testing
+.coverage
+
+
+
