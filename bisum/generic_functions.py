@@ -138,24 +138,9 @@ def tuples_to_ints(list_of_tuples, denseshape):
     denseshape = denseshape.type(list_of_tuples.dtype)
     #return torch.matmul(denseshape, list_of_tuples ) ## vector @ matrix product, (n) @ (n, N) , with O ~ nN (linear in N) ### this isnt implemented in cuda for pytorch!!!!! only works for int32
     return torch.sum(denseshape.unsqueeze(1) * list_of_tuples, 0) ## matrix-product
-    #return torch.matmul(list_of_tuples.T, denseshape ) 
+    #return torch.matmul(list_of_tuples.T, denseshape )
 
-#### TESTS 
-#device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-#device = torch.device("cpu")
-#print(device)
 
-#A       = torch.reshape(torch.randint(0, 15, (18,), device=device), (1,1,18))
-#shaper  = torch.tensor([2,4,6], device=device)
-#print( torch.allclose( torch.flatten(A), tuples_to_ints(ints_to_tuples(A, shaper), shaper)) )
-
-##### tester!!!
-#device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-#print(device)
-#B = torch.reshape(torch.randint(0, 15, (18,), device=device, dtype=torch.int32), (1,1,18))
-#sh= torch.tensor([2,4,6], device=device, dtype=torch.int32)
-
-#print( torch.allclose( torch.flatten(A), tuples_to_ints(ints_to_tuples(A, shaper), shaper)) )
 
 ##########################################
 ############## OUTERPRODUCT ##############

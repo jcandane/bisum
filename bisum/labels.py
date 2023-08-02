@@ -73,9 +73,9 @@ def einsumstr_to_labels(einsum_string : str, device : torch.device=torch.device(
     As_frees = torch.any((labelA.unsqueeze(1) == RHS.unsqueeze(0)), dim=1) ## frees
     Bs_frees = torch.any((labelB.unsqueeze(1) == RHS.unsqueeze(0)), dim=1)
     rhs      = torch.concat( (labelA[As_frees], labelB[Bs_frees]) )
-    
+
     onlydumb = torch.logical_and(torch.logical_not(As_frees).unsqueeze(1), torch.logical_not(Bs_frees).unsqueeze(0))
-    interdum = (labelA.unsqueeze(1) == labelB.unsqueeze(0)) ## everything 
+    interdum = (labelA.unsqueeze(1) == labelB.unsqueeze(0)) ## everything
     adjmatrix= torch.stack( torch.where(( torch.logical_and(onlydumb, interdum)  )) )
 
     lhs = [labelA, labelB]
@@ -116,11 +116,3 @@ def ncon_to_labels(ncon : List[torch.Tensor]):
         intratraces.append( torch.unique(dupes) )
 
     return LHS, RHS, intratraces
-
-## TEST 
-#ncon_example = [torch.tensor([1,8,-5,3]), torch.tensor([3,87,3])]
-
-#lhs, rhs, intratr = ncon_to_labels(ncon_example)
-#print(lhs)
-#print(rhs)
-#print(intratr)
