@@ -5,7 +5,7 @@ This python-file contains various tests for the bisum package.
 """
 
 import torch
-import pytest
+#import pytest
 
 from bisum import bisum
 

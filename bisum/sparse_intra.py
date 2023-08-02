@@ -245,21 +245,6 @@ def spa_post_intraTr_(index, data, shape_, label):
             #return torch.zeros_like(data[:,:,0], dtype=torch.int64), torch.sum(data), torch.ones_like(data[:,0,0]) ###!!!
             return torch.zeros((1,1), device=index.device, dtype=index.dtype), torch.sum(torch.unsqueeze(data, 0), dim=1), torch.ones(1, device=shape_.device, dtype=shape_.dtype) #
 
-
-#@torch.jit.script
-def spa_post_trans_X(index, data, shape_, rhs, RHS):
-    rhs=rhs[first_occurrence_mask(rhs)]
-    j = torch.argsort(rhs)
-    k = torch.argsort(RHS)
-    ik= iargsort(k)
-    m = j[ik]
-
-    cc= index[m,:]
-    s = shape_[m]
-    n = lexsort( cc )
-
-    return torch.sparse_coo_tensor( cc[:,n] , data[n], [int(i.item()) for i in s]) ## .type(torch.LongTensor) not needed
-
 @torch.jit.script
 def spa_post_trans_(index, data, shape_, rhs, RHS):
     if torch.numel(RHS)>0:

@@ -180,7 +180,7 @@ def ss_tensordot_(a_index, a_data, a_shape, b_index, b_data, b_shape, dims=None)
                         raise ValueError
     return I, data, shape_
 
-#@torch.jit.script
+@torch.jit.script
 def ds_tensordot_(a, b_index, b_data, b_shape, dims=None):
     """
     GIVEN : a, dense  torch.tensor
