@@ -101,23 +101,19 @@ def test_bisum_sparse2(A2, B2, einsumstr):
 
 class TestBisum:
     @pytest.fixture(scope="class")
-    @staticmethod
-    def A():
+    def A(self):
         return torch.rand(10,10,10, device=device)
 
     @pytest.fixture(scope="class")
-    @staticmethod
-    def B():
+    def B(self):
         return torch.rand(10,10,10, device=device)
 
     @pytest.fixture(scope="class")
-    @staticmethod
-    def A2():
+    def A2(self):
         return torch.rand(10,10,10,10,10,10, device=device)
 
     @pytest.fixture(scope="class")
-    @staticmethod
-    def A3():
+    def A3(self):
         return torch.rand(13,13,13, device=device)
 
     @staticmethod
