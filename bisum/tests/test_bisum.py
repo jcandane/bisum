@@ -35,6 +35,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 ####print( torch.allclose(C,c.to_dense()) and torch.allclose(C,s.to_dense()) and torch.allclose(C,S.to_dense()) )
 
+
+########
+# Only a few tests pass with the following einsumstr and tensors.
+# For right now, the ones failing are marked as XFAIL.
+
 #einsumstr = "mmQmI,DmmQ -> m"
 #einsumstr = "mmQmI,ImmQ -> m"
 #einsumstr = "abcde,dcag -> bg" ## DONE ---->having trouble with intratrace!!!
@@ -50,7 +55,49 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 #print(C.shape, c.shape)
 #print( torch.allclose(C, c.to_dense()) )
 
+@pytest.fixture(scope="module")
+def A():
+    return torch.rand([4,5,5,7,5]) ##[4,4,8,4,9])
+
+@pytest.fixture(scope="module")
+def B():
+    return torch.rand([7,6,4,9])   ##[2,4,4,8])
+
+@pytest.mark.parametrize("einsumstr", [
+    pytest.param("mmQmI,DmmQ -> m", marks=pytest.mark.xfail),
+    pytest.param("mmQmI,ImmQ -> m", marks=pytest.mark.xfail),  ## DONE ---->having trouble with intratrace!!!
+    pytest.param("abcde,dcag -> bg", marks=pytest.mark.xfail), ## post slice problems....
+    "abede,dcag -> bg",
+])
+def test_bisum_sparse_1(A, B, einsumstr):
+    ref = torch.einsum(einsumstr, A, B)
+    C = bisum(einsumstr, A.to_sparse(), B.to_sparse())
+    assert torch.allclose(C.to_dense(), ref)
+
+#### repeat tests with different tensors
+@pytest.fixture(scope="module")
+def A2():
+    return torch.rand([4,4,8,4,9])
+
+@pytest.fixture(scope="module")
+def B2():
+    return torch.rand([2,4,4,8])
+
+@pytest.mark.parametrize("einsumstr", [
+    "mmQmI,DmmQ -> m",
+    pytest.param("mmQmI,ImmQ -> m", marks=pytest.mark.xfail),  ## DONE ---->having trouble with intratrace!!!
+    pytest.param("abcde,dcag -> bg", marks=pytest.mark.xfail), ## post slice problems....
+    pytest.param("abede,dcag -> bg", marks=pytest.mark.xfail),
+])
+def test_bisum_sparse2(A2, B2, einsumstr):
+    ref = torch.einsum(einsumstr, A2, B2)
+    C = bisum(einsumstr, A2.to_sparse(), B2.to_sparse())
+    assert torch.allclose(C.to_dense(), ref)
+
+
 ### EINSUM TESTS
+#
+# These tests are all expected to pass.
 
 class TestBisum:
     @pytest.fixture(scope="class")
