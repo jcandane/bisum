@@ -64,9 +64,9 @@ and on PyTorch we can determine where we would like the tensor to live (on CPU x
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 ```
 
-\subsection*{`einsum`-like example}
+## `einsum`-like example
 
-We create natively dense random tensors (and can cast from to be sparse, via the `.to\_sparse()` command):
+We create natively dense random tensors (and can cast from to be sparse, via the `.to_sparse()` command):
 ```python
 A = torch.rand(8**3, device=device).reshape(8,8,8)
 B = torch.rand(8**3, device=device).reshape(8,8,8)
@@ -75,7 +75,7 @@ torch.allclose( bisum("ijk,kjl", A.to_sparse(), B ), einsum("ijk,kjl", A, B ) )
 torch.allclose( bisum("ijk,kjl", A.to_sparse(), B.to_sparse() ).to_dense(), einsum("ijk,kjl", A, B ) )
 ```
 
-\subsection*{other label types example}
+## other label types example
 
 `bisum` traces 2 sparse-tensors (`torch.tensor` objects) via 3 Tracing-prescriptions:
 1. `einsum`-string (like `numpy`, `str`, labelling each tensor axis)
